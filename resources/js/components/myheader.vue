@@ -12,6 +12,22 @@ const page = usePage()
 // Buyer and seller from Inertia shared props
 const buyer = computed(() => page.props.auth?.buyer ?? null)
 const seller = computed(() => page.props.auth?.seller ?? null)
+
+import { useI18n } from 'vue-i18n'
+import { router } from '@inertiajs/vue3'
+
+const { locale } = useI18n()
+
+function toggleLang() {
+  const next = locale.value === 'en' ? 'fr' : 'en'
+  locale.value = next
+
+  router.get(`/lang/${next}`, {}, {
+    preserveScroll: true,
+    preserveState: true
+  })
+}
+
 </script>
 
 <template>
@@ -21,9 +37,9 @@ const seller = computed(() => page.props.auth?.seller ?? null)
         <h1 class="logo">LIZYM</h1>
 
         <nav class="desktop-nav">
-          <Link href="/home">Home</Link>
-          <Link href="/">Shop</Link>
-          <Link href="/about">About</Link>
+          <Link href="/home">{{ $t('app.home') }}</Link>
+          <Link href="/">{{ $t('app.shop') }}</Link>
+          <Link href="/about">{{ $t('app.about') }}</Link>
         </nav>
 
         <div class="header-actions">
@@ -50,6 +66,11 @@ const seller = computed(() => page.props.auth?.seller ?? null)
               <path d="M7 8l-4 4 4 4"/>
             </svg>
           </Link>
+          <button class="lang-toggle" @click="toggleLang">
+            <span class="lang-pill">{{ locale === 'en' ? 'FR' : 'EN' }}</span>
+          </button>
+
+
 
           <!-- Mobile menu -->
           <button class="icon-btn mobile-menu-btn" @click="mobileMenu = !mobileMenu">
@@ -64,23 +85,32 @@ const seller = computed(() => page.props.auth?.seller ?? null)
 
       <!-- Mobile menu -->
       <div class="mobile-menu" :class="{ active: mobileMenu }">
-        <Link href="/home">Home</Link>
-        <Link href="/">Shop</Link>
-        <Link href="/about">About</Link>
-
+          <Link href="/home">{{ $t('app.home') }}</Link>
+          <Link href="/">{{ $t('app.shop') }}</Link>
+          <Link href="/about">{{ $t('app.about') }}</Link>
 
         <!-- Buyer -->
         <div v-if="buyer" style="font-weight:600; margin-left:1rem;">
-          <p>Welcome {{ buyer.name }}</p>
+          <p>{{ $t('app.wel') }} {{ buyer.name }}</p>
                   <!--  <p>(ID: {{ buyer.id }})</p>-->
         </div>
 
         <!-- Seller -->
         <div v-if="seller" style="font-weight:600; margin-left:1rem;">
-          <p>Welcome {{ seller.name }}</p>
+          <Link href="/seller/dashboard">Dashboard</Link>
+          <p>{{ $t('app.wel') }} {{ seller.name }}</p>
                   <!--  <p>(ID: {{ seller.id }})</p>-->
         </div>
       </div>
     </div>
   </header>
 </template>
+<style>
+.lang-pill {
+  background: #f3f3f3;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+}
+</style>

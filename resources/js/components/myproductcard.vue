@@ -16,6 +16,10 @@ function openModal() {
   <div class="product-card">
     <div class="product-image" @click="openModal">
       <img :src="product.image" :alt="product.name" />
+                 <img :src="`/img/${product.image}`"             
+                   alt="Product Image" 
+                   style="width: 400px;"
+              class="product-image" />
     </div>
 
     <div class="product-info">
@@ -24,7 +28,7 @@ function openModal() {
       <span class="product-price">FCFA {{ product.price.toFixed(2) }}</span>
 
       <button class="add-to-cart" @click="add(product)">
-        Add to Cart
+       {{ $t('app.add_to_cart') }}
       </button>
     </div>
   </div>
